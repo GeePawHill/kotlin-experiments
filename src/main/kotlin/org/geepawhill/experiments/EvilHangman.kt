@@ -1,7 +1,6 @@
 package org.geepawhill.experiments
 
-class EvilHangman(val wordLength: Int) {
-    val dictionary = mutableListOf("a", "i")
+class EvilHangman(val wordLength: Int, private val dictionary: MutableList<String> = mutableListOf()) {
 
     var hungMon: String = "_"
 
@@ -12,5 +11,4 @@ class EvilHangman(val wordLength: Int) {
             hungMon = letter.toString()
         }
     }
-
 }
