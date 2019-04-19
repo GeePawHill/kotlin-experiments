@@ -6,10 +6,10 @@ class EvilHangman(val wordLength: Int) {
     var hungMon: String = "_"
 
     fun guess(letter: Char) {
-        if (dictionary.size == 1 && dictionary.contains(letter.toString())) {
+        dictionary -= letter.toString()
+
+        if (dictionary.isEmpty()) {
             hungMon = letter.toString()
-        } else {
-            dictionary -= letter.toString()
         }
     }
 
