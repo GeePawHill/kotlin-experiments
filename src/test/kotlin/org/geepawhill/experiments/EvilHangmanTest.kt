@@ -49,12 +49,31 @@ class EvilHangmanTest {
         assertThat(hangman.hungMon).isEqualTo("_")
     }
 
+    @Test
+    fun `two letter word`() {
+        val hangman = EvilHangman(2, mutableListOf("ma", "me"))
+
+        hangman.guess('x')
+
+        assertThat(hangman.hungMon).isEqualTo("__")
+    }
+
+    @Test
+    fun `guessing a shortens the dictionary`() {
+        val hangman = EvilHangman(2, mutableListOf("ma", "me"))
+
+        hangman.guess('a')
+        hangman.guess('e')
+
+        assertThat(hangman.hungMon).isEqualTo("_e")
+    }
+
 //    @Test
-//    fun `two letter word`() {
-//        val hangman = EvilHangman(wordLength = 2, listOf("ma", "me"))
+//    fun `guessing m gets gets the m`() {
+//        val hangman = EvilHangman(2, mutableListOf("ma", "me"))
 //
-//        hangman.guess('x')
+//        hangman.guess('m')
 //
-//        assertThat(hangman.hungMon).isEqualTo("__")
+//        assertThat(hangman.hungMon).isEqualTo("m_")
 //    }
 }
