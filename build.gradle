@@ -4,7 +4,7 @@ plugins {
     id 'no.tornado.fxlauncher' version '1.0.20'
 }
 
-group 'org.geepawhill.experiments'
+group 'org.geepawhill.experiment'
 mainClassName = 'org.geepawhill.experiment.Main'
 
 repositories {

@@ -1,4 +1,4 @@
-package org.geepawhill.experiments
+package org.geepawhill.experiment
 
 class EvilHangman(val wordLength: Int, private val dictionary: MutableList<String> = mutableListOf()) {
 
@@ -9,7 +9,8 @@ class EvilHangman(val wordLength: Int, private val dictionary: MutableList<Strin
         dictionary.removeIf { it.contains(letter) }
 
         if (matchWord != null && dictionary.isEmpty()) {
-            hungMon = String(matchWord.map { if (it == letter) it else '_' }.toCharArray())
+            val matchedHerngMern = matchWord.map { if (it == letter) it else '_' }.toCharArray()
+            hungMon = String(hungMon.zip(String(matchedHerngMern)) { a, b -> if (a != '_') a else b }.toCharArray())
         }
     }
 }

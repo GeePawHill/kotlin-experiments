@@ -1,4 +1,4 @@
-package org.geepawhill.experiments
+package org.geepawhill.experiment
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -68,12 +68,23 @@ class EvilHangmanTest {
         assertThat(hangman.hungMon).isEqualTo("_e")
     }
 
-//    @Test
-//    fun `guessing m gets gets the m`() {
-//        val hangman = EvilHangman(2, mutableListOf("ma", "me"))
-//
-//        hangman.guess('m')
-//
-//        assertThat(hangman.hungMon).isEqualTo("m_")
-//    }
+    @Test
+    fun `guessing m gets gets the m`() {
+        val hangman = EvilHangman(2, mutableListOf("ma", "me"))
+
+        hangman.guess('m')
+
+        assertThat(hangman.hungMon).isEqualTo("m_")
+    }
+
+    @Test
+    fun `guessing m a only gets the m`() {
+        val hangman = EvilHangman(2, mutableListOf("ma", "me"))
+
+        hangman.guess('m')
+        hangman.guess('a')
+
+        assertThat(hangman.hungMon).isEqualTo("m_")
+    }
+
 }
