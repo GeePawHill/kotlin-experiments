@@ -2,7 +2,6 @@ package org.geepawhill.hangman
 
 class Response(
         val word: String,
-        val badGuessesAllowed: Int,
         val revealed: String,
         val status: Status,
         val badGuesses: String = ""
@@ -16,20 +15,20 @@ class Response(
 
     val isWin: Boolean get()= status== Status.WON
 
-    fun guess(letter: Char): Response {
+    fun guess(letter: Char, badGuessesAllowed: Int): Response {
         if(isHit(letter)) return makeHitResponse(letter)
         if(missIsDuplicate(letter)) return this
-        return makeMissResponse(letter)
+        return makeMissResponse(letter, badGuessesAllowed)
     }
 
     private fun isHit(letter: Char): Boolean = word.contains(letter)
 
     private fun missIsDuplicate(letter: Char) = badGuesses.contains(letter)
 
-    private fun makeMissResponse(letter: Char): Response {
+    private fun makeMissResponse(letter: Char, badGuessesAllowed: Int): Response {
         val newStatus = if (badGuesses.length == badGuessesAllowed - 1) Status.LOST
         else Status.ONGOING
-        return Response(word, 10, revealed, newStatus, badGuesses + letter)
+        return Response(word, revealed, newStatus, badGuesses + letter)
     }
 
     private fun makeHitResponse(letter: Char): Response {
@@ -38,7 +37,7 @@ class Response(
             newRevealed == word -> Status.WON
             else -> Status.ONGOING
         }
-        return Response(word, badGuessesAllowed = 10, revealed = newRevealed, status = newStatus)
+        return Response(word, revealed = newRevealed, status = newStatus)
     }
 
     private fun replaceAllCorrectLetters(letter: Char): String {
