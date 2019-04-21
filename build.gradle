@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'org.geepawhill.experiment'
-mainClassName = 'org.geepawhill.experiment.Main'
+mainClassName = 'org.geepawhill.hangman.Main'
 
 repositories {
     mavenCentral()
