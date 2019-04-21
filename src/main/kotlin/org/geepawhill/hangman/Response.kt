@@ -1,6 +1,12 @@
 package org.geepawhill.hangman
 
-class Response(val word: String, val revealed: String, val status: Status, val badGuessesAllowed: Int, val badGuesses: String = "") {
+class Response(
+        val word: String,
+        val revealed: String,
+        val status: Status,
+        val badGuessesAllowed: Int,
+        val badGuesses: String = ""
+) {
 
     enum class Status  {
         WON,
@@ -11,26 +17,28 @@ class Response(val word: String, val revealed: String, val status: Status, val b
     val isWin: Boolean get()= status== Status.WON
 
     fun guess(letter: Char): Response {
-        // search for valid new letters, if we find them, get outta here
-        for (index in 0..word.length - 1) {
-            if (word[index] == letter) {
-                val newRevealed = replaceAllCorrectLetters(letter)
-                val newStatus = when {
-                    newRevealed==word -> Status.WON
-                    else -> Status.ONGOING
-                }
-                return Response(word, newRevealed, status = newStatus, badGuessesAllowed = 10)
-            }
-        }
+        if(isHit(letter)) return makeHitResponse(letter)
+        if(missIsDuplicate(letter)) return this
+        return makeMissResponse(letter)
+    }
 
-        // if they already guessed this letter, get outta here with no change
-        if(badGuesses.contains(letter)) return this
+    private fun isHit(letter: Char): Boolean = word.contains(letter)
 
-        // this is a bad guess
-        val newStatus = if(badGuesses.length==badGuessesAllowed-1) Status.LOST
+    private fun missIsDuplicate(letter: Char) = badGuesses.contains(letter)
+
+    private fun makeMissResponse(letter: Char): Response {
+        val newStatus = if (badGuesses.length == badGuessesAllowed - 1) Status.LOST
         else Status.ONGOING
-
         return Response(word, revealed, newStatus, 10, badGuesses + letter)
+    }
+
+    private fun makeHitResponse(letter: Char): Response {
+        val newRevealed = replaceAllCorrectLetters(letter)
+        val newStatus = when {
+            newRevealed == word -> Status.WON
+            else -> Status.ONGOING
+        }
+        return Response(word, newRevealed, status = newStatus, badGuessesAllowed = 10)
     }
 
     private fun replaceAllCorrectLetters(letter: Char): String {
