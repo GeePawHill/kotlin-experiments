@@ -5,7 +5,7 @@ import kotlin.system.exitProcess
 
 fun main() {
     println("Let's play hangman!")
-    var response = newGame()
+    var game = newGame()
     while(true) {
         print("> ")
         val input = readLine()
@@ -17,14 +17,14 @@ fun main() {
         when(cased) {
             "" -> println("0 to quit, 1 to start a new game, or a letter to guess that letter ")
             "0" -> exitProcess(0)
-            "1" -> response = newGame()
+            "1" -> game = newGame()
             else -> {
-                if(response.status!=Response.Status.ONGOING) {
+                if(game.status!=Response.Status.ONGOING) {
                     println("This game is over, use 1 to start a new one, or 0 to quit.")
                 }
                 else {
-                    response = response.guess(cased[0])
-                    println(response.revealed)
+                    game.guess(cased[0])
+                    println(game.revealed)
                 }
             }
         }
@@ -33,9 +33,9 @@ fun main() {
     }
 }
 
-private fun newGame():Response {
+private fun newGame():Game {
     println("Cool, a new game!")
-    val result = Response("BEARD", "_____", Response.Status.ONGOING, badGuessesAllowed = 10)
+    val result = Game()
     println(result.revealed)
     return result
 }
