@@ -2,9 +2,9 @@ package org.geepawhill.hangman
 
 class Response(
         val word: String,
+        val badGuessesAllowed: Int,
         val revealed: String,
         val status: Status,
-        val badGuessesAllowed: Int,
         val badGuesses: String = ""
 ) {
 
@@ -29,7 +29,7 @@ class Response(
     private fun makeMissResponse(letter: Char): Response {
         val newStatus = if (badGuesses.length == badGuessesAllowed - 1) Status.LOST
         else Status.ONGOING
-        return Response(word, revealed, newStatus, 10, badGuesses + letter)
+        return Response(word, 10, revealed, newStatus, badGuesses + letter)
     }
 
     private fun makeHitResponse(letter: Char): Response {
@@ -38,7 +38,7 @@ class Response(
             newRevealed == word -> Status.WON
             else -> Status.ONGOING
         }
-        return Response(word, newRevealed, status = newStatus, badGuessesAllowed = 10)
+        return Response(word, badGuessesAllowed = 10, revealed = newRevealed, status = newStatus)
     }
 
     private fun replaceAllCorrectLetters(letter: Char): String {
