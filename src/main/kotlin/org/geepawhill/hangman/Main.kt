@@ -35,7 +35,7 @@ fun main() {
 
 private fun newGame():Response {
     println("Cool, a new game!")
-    val result = Response("BEARD", "_____", Response.Status.ONGOING)
+    val result = Response("BEARD", "_____", Response.Status.ONGOING, badGuessesAllowed = 10)
     println(result.revealed)
     return result
 }
