@@ -31,43 +31,42 @@ class ResponseTest {
 
     @Test
     fun `last failed guess loses`() {
-        val response = Response("COW", "___", Response.Status.ONGOING, "123456789").guess('A', badGuessesAllowed)
+        val response = Response("COW", "___", Response.Status.ONGOING, "").guess('A', 1)
         assertThat(response.status).isEqualTo(Response.Status.LOST)
     }
 
     @Test
-    fun `success guess`() {
+    fun `success guess changes revealed`() {
         val response = Response("ABC", "___", Response.Status.ONGOING, "").guess('A', badGuessesAllowed)
-        assertThat(response.status).isEqualTo(Response.Status.ONGOING)
         assertThat(response.revealed).isEqualTo("A__")
     }
 
     @Test
-    fun `success guess is last character`()
+    fun `success guess changes revealed at last character`()
     {
         val response = Response("ABC", "___", Response.Status.ONGOING).guess('C', badGuessesAllowed)
         assertThat(response.revealed).isEqualTo("__C")
     }
 
     @Test
-    fun `reveals duplicate success letters`() {
+    fun `success guess reveals all success letters`() {
         val response = Response("MAMA", "____", Response.Status.ONGOING).guess('A', badGuessesAllowed)
         assertThat(response.revealed).isEqualTo("_A_A")
     }
 
     @Test
-    fun `success guess wins`()
+    fun `last success guess wins`()
     {
         val response = Response("ABC", "AB_", Response.Status.ONGOING).guess('C', badGuessesAllowed)
         assertThat(response.status).isEqualTo(Response.Status.WON)
-        assertThat(response.revealed).isEqualTo("ABC")
     }
 
-
-
-
-
-
+    @Test
+    fun `eliminates letters`()
+    {
+        val response = Response(listOf("ME","MA"), "M_", Response.Status.ONGOING).guess('E',10)
+        assertThat(response.badGuesses).contains("E")
+    }
 
     @Test
     fun `reduce list by hit letters`()
@@ -78,32 +77,12 @@ class ResponseTest {
     }
 
     @Test
-    fun `eliminates letters`()
+    fun `reduce list by hit letters two`()
     {
-        val response = Response(listOf("ME","MA"), "__", Response.Status.ONGOING).guess('M', badGuessesAllowed).guess('E',10)
-        assertThat(response.badGuesses).contains("E")
+        val response = Response(listOf("MA","ME"), "__", Response.Status.ONGOING).guess('M', badGuessesAllowed).guess('E',badGuessesAllowed)
+        assertThat(response.dictionary).containsExactly("MA")
     }
 
-
-
-
-
-
-
-    @Test
-    fun `it is a win if this guess makes the revealed string the same as the word`()
-    {
-        val response = Response("ABC", "_BC", Response.Status.ONGOING).guess('A', badGuessesAllowed)
-        assertThat(response.isWin).isTrue()
-        assertThat(response.revealed).isEqualTo("ABC")
-    }
-
-    @Test
-    fun `it is a loss if you run out of bad guesses`()
-    {
-        val response = Response("ABC", "_BC", Response.Status.ONGOING).guess('Z', 1)
-        assertThat(response.status).isEqualTo(Response.Status.LOST)
-    }
 
     @Test
     fun `duplicate successes are idempotent`() {

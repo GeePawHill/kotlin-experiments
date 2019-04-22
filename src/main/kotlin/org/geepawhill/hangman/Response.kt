@@ -1,7 +1,7 @@
 package org.geepawhill.hangman
 
 class Response(
-        private val dictionary: List<String>,
+        val dictionary: List<String>,
         val revealed: String,
         val status: Status,
         val badGuesses: String = ""
