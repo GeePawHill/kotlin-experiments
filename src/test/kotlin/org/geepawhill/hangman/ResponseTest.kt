@@ -11,7 +11,7 @@ class ResponseTest {
     @Test
     fun `failed guess`()
     {
-        val response = Response("COW", revealed = "___", status = Response.Status.ONGOING).guess('A', badGuessesAllowed)
+        val response = Response("COW", "___", Response.Status.ONGOING).guess('A', badGuessesAllowed)
         assertThat(response.isWin).isFalse()
         assertThat(response.revealed).isEqualTo("___")
     }
@@ -24,14 +24,14 @@ class ResponseTest {
 
     @Test
     fun `duplicate success letters in word`() {
-        val response = Response("MAMA", revealed = "____", status = Response.Status.ONGOING).guess('A', badGuessesAllowed)
+        val response = Response("MAMA", "____", Response.Status.ONGOING).guess('A', badGuessesAllowed)
         assertThat(response.revealed).isEqualTo("_A_A")
     }
 
     @Test
     fun `Failed guesses are recorded`()
     {
-        val response = Response("COW", revealed = "___", status = Response.Status.ONGOING).guess('A', badGuessesAllowed)
+        val response = Response("COW", "___", Response.Status.ONGOING).guess('A', badGuessesAllowed)
         assertThat(response.badGuesses).isEqualTo("A")
         assertThat(response.guess('B', badGuessesAllowed).badGuesses).isEqualTo("AB")
     }
@@ -39,7 +39,7 @@ class ResponseTest {
     @Test
     fun `it is a win if this guess makes the revealed string the same as the word`()
     {
-        val response = Response("ABC", revealed = "_BC", status = Response.Status.ONGOING).guess('A', badGuessesAllowed)
+        val response = Response("ABC", "_BC", Response.Status.ONGOING).guess('A', badGuessesAllowed)
         assertThat(response.isWin).isTrue()
         assertThat(response.revealed).isEqualTo("ABC")
     }
@@ -53,14 +53,14 @@ class ResponseTest {
 
     @Test
     fun `duplicate successes are idempotent`() {
-        val response = Response("ABC", revealed = "___", status = Response.Status.ONGOING).guess('A', badGuessesAllowed)
+        val response = Response("ABC", "___", Response.Status.ONGOING).guess('A', badGuessesAllowed)
         val duplicate = response.guess('A', badGuessesAllowed)
         assertThat(duplicate).isEqualToComparingFieldByFieldRecursively(response)
     }
 
     @Test
     fun `duplicate failures are idempotent`() {
-        val response = Response("ABC", revealed = "___", status = Response.Status.ONGOING).guess('Q', badGuessesAllowed)
+        val response = Response("ABC", "___", Response.Status.ONGOING).guess('Q', badGuessesAllowed)
         val duplicate = response.guess('Q', badGuessesAllowed)
         assertThat(duplicate).isEqualToComparingFieldByFieldRecursively(response)
     }
@@ -69,7 +69,7 @@ class ResponseTest {
     @Test
     fun `accurate guess is last character`()
     {
-        val response = Response("ABC", revealed = "AB_", status = Response.Status.ONGOING).guess('C', badGuessesAllowed)
+        val response = Response("ABC", "AB_", Response.Status.ONGOING).guess('C', badGuessesAllowed)
         assertThat(response.isWin).isTrue()
     }
 
