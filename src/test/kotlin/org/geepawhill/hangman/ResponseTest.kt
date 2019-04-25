@@ -62,27 +62,19 @@ class ResponseTest {
     }
 
     @Test
-    fun `eliminates letters`()
+    fun `forced success reveals correctly `()
     {
-        val response = Response(listOf("ME","MA"), "M_", Response.Status.ONGOING).guess('E',10)
-        assertThat(response.badGuesses).contains("E")
+        val response = Response(listOf("ME","MA"), "__", Response.Status.ONGOING).guess('M',10)
+        assertThat(response.revealed).isEqualTo("M_")
     }
 
     @Test
-    fun `reduce list by hit letters`()
+    fun `cheating fail removes now-disallowed words`()
     {
-        val response = Response(listOf("MA","ME"), "__", Response.Status.ONGOING).guess('M', badGuessesAllowed).guess('A',10)
-        assertThat(response.badGuesses).contains("A")
-        assertThat(response.guess('E',10).status).isEqualTo(Response.Status.WON)
-    }
-
-    @Test
-    fun `reduce list by hit letters two`()
-    {
-        val response = Response(listOf("MA","ME"), "__", Response.Status.ONGOING).guess('M', badGuessesAllowed).guess('E',badGuessesAllowed)
+        val response = Response(listOf("ME","MA"), "__", Response.Status.ONGOING).guess('E',10)
+        assertThat(response.badGuesses).isEqualTo("E")
         assertThat(response.dictionary).containsExactly("MA")
     }
-
 
     @Test
     fun `duplicate successes are idempotent`() {
