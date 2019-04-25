@@ -1,7 +1,7 @@
 package org.geepawhill.hangman
 
-class Response(
-        val dictionary: List<String>,
+open class Response(
+        protected val dictionary: List<String>,
         val revealed: String,
         val status: Status,
         val badGuesses: String = ""
@@ -19,7 +19,7 @@ class Response(
         ONGOING
     }
 
-    val isWin: Boolean get()= status== Status.WON
+    open fun make(dictionary: List<String>,revealed: String, status: Status, badGuesses: String) = Response(dictionary,revealed,status,badGuesses)
 
     fun guess(letter: Char, badGuessesAllowed: Int): Response {
         if(isHit(letter)) return makeHitResponse(letter)
@@ -36,7 +36,7 @@ class Response(
     private fun makeMissResponse(letter: Char, badGuessesAllowed: Int): Response {
         val newStatus = if (badGuesses.length == badGuessesAllowed - 1) Status.LOST
         else Status.ONGOING
-        return Response(dictionary.filter { !it.contains(letter) }, revealed, newStatus, badGuesses + letter)
+        return make(dictionary.filter { !it.contains(letter) }, revealed, newStatus, badGuesses + letter)
     }
 
     private fun makeHitResponse(letter: Char): Response {
@@ -45,7 +45,7 @@ class Response(
             dictionary[0] -> Status.WON
             else -> Status.ONGOING
         }
-        return Response(dictionary, revealed = newRevealed, status = newStatus)
+        return make(dictionary, newRevealed, newStatus, badGuesses)
     }
 
     private fun replaceAllCorrectLetters(letter: Char): String {

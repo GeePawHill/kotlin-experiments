@@ -6,6 +6,14 @@ import org.junit.jupiter.api.Test
 
 class ResponseTest {
 
+    class TestableResponse(dictionary: List<String>, revealed: String, status: Response.Status, badGuesses: String) : Response(dictionary,revealed,status,badGuesses) {
+        override fun make(dictionary: List<String>, revealed: String, status: Status, badGuesses: String): Response {
+            return TestableResponse(dictionary, revealed, status, badGuesses)
+        }
+
+        val testDictionary:List<String> get() = super.dictionary
+    }
+
     private val badGuessesAllowed=10
 
     @Test
@@ -71,14 +79,14 @@ class ResponseTest {
     @Test
     fun `cheating fail removes now-disallowed words`()
     {
-        val response = Response(listOf("ME","MA"), "__", Response.Status.ONGOING).guess('E',10)
+        val response = TestableResponse(listOf("ME","MA"), "__", Response.Status.ONGOING, "").guess('E',10) as TestableResponse
         assertThat(response.badGuesses).isEqualTo("E")
-        assertThat(response.dictionary).containsExactly("MA")
+        assertThat(response.testDictionary).containsExactly("MA")
     }
 
     @Test
     fun `duplicate successes are idempotent`() {
-        val response = Response("ABC", "___", Response.Status.ONGOING).guess('A', badGuessesAllowed)
+        val response = Response("ABC", "___", Response.Status.ONGOING, "").guess('A', badGuessesAllowed)
         val duplicate = response.guess('A', badGuessesAllowed)
         assertThat(duplicate).isEqualToComparingFieldByFieldRecursively(response)
     }
